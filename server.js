@@ -11,18 +11,12 @@ var express = require('express');
 
 app = express();
 
-
-
-
 const server = http.createServer((req,res) => {
 	let timestamp = new Date().toISOString();
 	console.log(`Incoming request ${req.method}, ${req.url} received at ${timestamp}`);
 
 	let parsedURL = url.parse(req.url,true); // true to get query as object 
-	let max = (parsedURL.query.max) ? parsedURL.query.max : 20;
-
-	
-   		 
+	let max = (parsedURL.query.max) ? parsedURL.query.max : 20;   		 
 
 
 	switch(parsedURL.pathname) {
@@ -63,7 +57,7 @@ const server = http.createServer((req,res) => {
 });
 
 
-const login= (db,max,criteria,callback) =>{
+const login= (res,doc) =>{
 	app.post('/register', function(req,res){ 
 		var name = req.body.regid;
 		var passa = req.body.comfirmpassword; 
