@@ -93,14 +93,13 @@ app.get('/list',(req, res) => {
 			console.log("Connected successfully to server");
 			const db = client.db(dbName);
 			const findRestaurant = (db, callback) => { 
-				res.writeHead(200, {"Content-Type": "text/html"});
-				res.write('<html><head><title>Restaurant</title></head>');
+				let i = 0
+				let y = 0
+				let namelist = {};
 				let cursor2 = db.collection('restaurants').find()
-				cursor2.forEach((rn) => {
-					res.write('<li>${rn.name}</li>');	
+				cursor2.forEach((resname) => { 
+					res.status(200).render('restaurantList',{rname:resname});
 				});
-				res.end('</body></html>');
-				res.status(200).render('restaurantList',{rname:req.session.username});
 				callback();
 			}
 			client.connect((err) => { 
@@ -117,6 +116,10 @@ app.get('/list',(req, res) => {
 
 
 app.post('/list',(req, res) => {
+	res.writeHead(200, {'Content-Type': 'text/html'}); 
+	res.write('<html>')   
+	res.write('<br><a href="/">Register Success</a>')
+	res.end('</html>') 	
 });
 
 
@@ -189,7 +192,7 @@ app.post('/create', function(req, res, next){
                     new_r['image'] = new Buffer.from(data).toString('base64');
 
                     var _coord = { latitude: fields.latitude , longitude: fields.longitude};
-                    var doc = { restaurant_id: fields.r_id ,
+                    var doc = { restaurant_id: fields.ObjectId ,
                                 name: fields.name , 
                                borough: fields.borough,
                                cuisine: fields.cuisine,
@@ -214,8 +217,8 @@ app.post('/create', function(req, res, next){
         });
 
             res.writeHead(200, {'Content-Type': 'text/html'});
-            res.write('Create Restaurant was successful');
-            res.write('<form action="/index">');
+            res.write('Restaurant Created');
+            res.write('<form action="/">');
             res.write('<input type="submit" value="Go Back"/>');
             res.write('</form>');
             res.end();
